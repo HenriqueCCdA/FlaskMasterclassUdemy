@@ -1,6 +1,7 @@
 # virtualenv
 .flask-masterclass
 .database-manager
+.template_engine
 
 # IDE
 .vscode
