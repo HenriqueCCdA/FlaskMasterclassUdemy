@@ -2,6 +2,11 @@
 .flask-masterclass
 .database-manager
 .template_engine
+.refractory
+.forms
 
 # IDE
 .vscode
+
+# codebyte
+__pycache__
