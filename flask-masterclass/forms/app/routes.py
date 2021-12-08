@@ -1,12 +1,13 @@
 from datetime import timedelta
+import re
 
-from flask import flash, redirect, render_template, request, url_for
-from flask_login import login_required, login_user, logout_user
+from flask import flash, redirect, render_template, url_for
+from flask_login import login_required, login_user, logout_user, current_user
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from app import db
-from app.forms import LoginForm, RegisterForm
-from app.models import User
+from app.forms import BookForm, LoginForm, RegisterForm, UserBookForm
+from app.models import Book, User
 
 
 def init_app(app):
@@ -75,3 +76,37 @@ def init_app(app):
     def logout():
         logout_user()
         return redirect(url_for('index'))
+
+
+    @app.route('/book/add', methods=['GET','POST'])
+    def book_add():
+        form = BookForm()
+
+        if form.validate_on_submit():
+            book = Book()
+            book.name = form.name.data
+
+            db.session.add(book)
+            db.session.commit()
+
+            flash('Livro cadastrado com sucesso', 'success')
+
+            return redirect(url_for('book_add'))
+
+        return render_template('book/add.html', form=form)
+
+
+    @app.route('/user/<id>/add-book', methods=['GET','POST'])
+    def user_add_book(id):
+        form = UserBookForm()
+        if form.validate_on_submit():
+            book = Book.query.get(form.book.data)
+            user = current_user
+            user.books.append(book)
+            db.session.add(user)
+            db.session.commit()
+
+            flash('Livro cafastrado com sucesso!', 'success')
+            return redirect(url_for('user_add_book', id=user.id))
+
+        return render_template('book/user_add_book.html', form=form)
