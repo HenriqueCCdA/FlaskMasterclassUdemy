@@ -4,6 +4,7 @@
 .template_engine
 .refractory
 .forms
+.blueprints
 
 # IDE
 .vscode
