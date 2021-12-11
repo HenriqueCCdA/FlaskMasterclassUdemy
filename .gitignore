@@ -5,6 +5,7 @@
 .refractory
 .forms
 .blueprints
+.venv
 
 # IDE
 .vscode
