@@ -1,26 +1,35 @@
-import os
-
 from flask import Flask
 from flask_admin import Admin
-from flask_admin.contrib.sqla import ModelView
+from flask_login import LoginManager, login_manager
 from flask_sqlalchemy import SQLAlchemy
 
+from config import Config
+
+
 db = SQLAlchemy()
+login_manager = LoginManager()
+login_manager.login_view = 'login.html'
+
 
 
 def create_app():
 
     app = Flask(__name__)
-    app.config['FLASK_ADMIN_SWATCH'] = 'cosmo'
-    app.config['SECRET_KEY'] = 'chave secreta'
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URI']
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = os.environ['DATABASE_TRACT_MODIFICATONS']
+    app.config.from_object(Config)
 
-    admin = Admin(app, name='Spacedevs', template_mode="bootstrap3")
     db.init_app(app)
+    login_manager.init_app(app)
 
-    from models import User
+    @app.route('/login')
+    def login():
+        return 'Login page'
 
-    admin.add_view(ModelView(User, db.session))
+
+    # register admin page
+    admin = Admin(app, name='Spacedevs', template_mode="bootstrap3")
+    import admin as administrator
+    administrator.init_app(admin)
+
+
 
     return app
