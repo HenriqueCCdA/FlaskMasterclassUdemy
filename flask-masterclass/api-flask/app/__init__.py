@@ -17,4 +17,8 @@ def create_app(config_name):
     from app.resource.contacts import Conctacs
     api.add_resource(Conctacs, '/contacts')
 
+    from app.resource.auth import Login, Register
+    api.add_resource(Login, '/login')
+    api.add_resource(Register, '/register')
+
     return app
